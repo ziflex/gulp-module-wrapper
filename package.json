@@ -1,0 +1,43 @@
+{
+  "name": "gulp-module-wrapper",
+  "version": "0.1.0",
+  "description": "Creates modules.",
+  "main": "index.js",
+  "scripts": {
+    "test": "gulp test"
+  },
+  "keywords": [
+    "amd",
+    "gulp",
+    "gulpplugin",
+    "module",
+    "wrap"
+  ],
+  "engines": {
+    "node": ">= 0.10"
+  },
+  "author": "ziflex (Tim Voronov)",
+  "license": "MIT",
+  "dependencies": {
+    "esprima": "^1.2.2",
+    "gulp": "^3.8.10",
+    "gulp-match": "^0.2.1",
+    "gulp-util": "^3.0.1",
+    "lodash": "^2.4.1",
+    "through2": "^0.6.3"
+  },
+  "devDependencies": {
+    "gulp": "^3.8.10",
+    "gulp-concat": "^2.4.2",
+    "gulp-jshint": "^1.9.0",
+    "gulp-jst": "^0.1.1",
+    "gulp-mocha": "^2.0.0",
+    "gulp-wrap": "^0.5.0",
+    "lodash-cli": "^2.4.2",
+    "mocha": "^2.0.1",
+    "mocha-fivemat-reporter": "0.0.6",
+    "should": "^4.4.1",
+    "stream-array": "^1.0.1",
+    "stream-assert": "^2.0.2"
+  }
+}

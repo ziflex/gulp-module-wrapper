@@ -1,0 +1,8 @@
+﻿define(<%= data.name ? JSON.stringify(data.name) + ',' : '' %><%= data.deps ? JSON.stringify(data.deps) + ',' : '[],' %>function(<%= (!data.args ? [] : data.args.join(',')).toString() %>){
+<% if(data.exports){ %>
+<%= data.body %>
+return <%= data.exports %>;
+<% } else { %>
+<%= data.body %>
+<% } %>
+});
