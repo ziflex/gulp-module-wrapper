@@ -1,4 +1,16 @@
+'use strict';
 var templates = require('./templates/templates');
+var utils = require('./utils');
+
+function normalize(data) {
+    if (data.args && data.args.length) {
+        data.args = data.args.map(function (arg) {
+            return utils.parametrize(arg);
+        });
+    }
+
+    return data;
+}
 
 module.exports = function (options) {
     var template = templates[options.type],
@@ -6,7 +18,7 @@ module.exports = function (options) {
 
     if (template) {
         result = template({
-            data: options.data
+            data: normalize(options.data)
         });
     }
 

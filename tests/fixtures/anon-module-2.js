@@ -1,4 +1,3 @@
 define(['dep1', 'dep2'], function () {
-    var name = 'test-module';
-    console.log(name);
+    console.log("anon-module-2");
 });

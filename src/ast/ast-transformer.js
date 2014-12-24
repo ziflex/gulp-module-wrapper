@@ -1,3 +1,4 @@
+'use strict';
 var syntax = require('./ast-syntax');
 var amd = require('./analyzers/amd');
 var compile = require('./../compiler');
@@ -31,7 +32,7 @@ module.exports = function (node, options) {
             node.update(compile({
                 type: analyzer.type,
                 data: structure
-            }))
+            }));
         }
     }
 };

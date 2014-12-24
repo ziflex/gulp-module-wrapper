@@ -19,7 +19,7 @@ __p += '\r\n' +
 ((__t = ( data.exports )) == null ? '' : __t) +
 ';\r\n';
  } else { ;
-__p += '\r\n' +
+__p += '\r\nreturn ' +
 ((__t = ( data.body )) == null ? '' : __t) +
 '\r\n';
  } ;

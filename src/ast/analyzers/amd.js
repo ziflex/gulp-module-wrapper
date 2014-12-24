@@ -1,4 +1,4 @@
-var _ = require('lodash');
+'use strict';
 var syntax = require('./../ast-syntax');
 
 module.exports =  function (node, options) {
@@ -32,6 +32,10 @@ module.exports =  function (node, options) {
     structure.args = (options.args || []).concat(structure.args || []);
     structure.body = structure.body;
     structure.exports = options.exports;
+
+    if (structure.deps.length > structure.args.length) {
+        structure.args = structure.args.concat(structure.deps.slice(structure.args.length));
+    }
 
     return structure;
 };

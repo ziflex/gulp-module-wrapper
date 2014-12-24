@@ -12,8 +12,8 @@ var PLUGIN_NAME = 'gulp-module-wrapper';
 function getOptions(file, opts) {
     var filename = path.basename(file.path),
         defaults = {
-            deps: ["require", "exports", "module"],
-            args: ["require", "exports", "module"]
+            deps: ['require', 'exports', 'module'],
+            args: ['require', 'exports', 'module']
         },
         result;
 
@@ -29,9 +29,11 @@ function getOptions(file, opts) {
     result.deps = defaults.deps.concat(result.deps || []);
     result.args = defaults.args.concat(result.args || []);
 
-    if (typeof result.root === 'string' && !result.name) {
-        result.name = path.relative(result.root, result.file.path).slice(0, -path.extname(result.file.path).length);
-    } else if (!result.name) {
+    if (typeof result.root === 'string') {
+        result.name = path.relative(result.root, result.file.path).slice(0, -path.extname(result.file.path).length).replace(/\\/gi, '/');
+    }
+
+    if (typeof result.name !== 'string') {
         result.name = path.basename(result.file.path, path.extname(result.file.path));
     }
 

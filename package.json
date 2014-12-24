@@ -1,6 +1,6 @@
 {
   "name": "gulp-module-wrapper",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Creates modules.",
   "main": "index.js",
   "scripts": {
@@ -28,11 +28,13 @@
   },
   "devDependencies": {
     "gulp": "^3.8.10",
+    "gulp-bump": "^0.1.11",
     "gulp-concat": "^2.4.2",
     "gulp-jshint": "^1.9.0",
     "gulp-jst": "^0.1.1",
     "gulp-mocha": "^2.0.0",
     "gulp-wrap": "^0.5.0",
+    "jshint-stylish": "^1.0.0",
     "lodash-cli": "^2.4.2",
     "mocha": "^2.0.1",
     "mocha-fivemat-reporter": "0.0.6",

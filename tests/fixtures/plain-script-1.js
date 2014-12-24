@@ -1,0 +1,1 @@
+console.log('plain-script-1');

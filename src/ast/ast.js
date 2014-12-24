@@ -1,3 +1,4 @@
+'use strict';
 var parse = require('./ast-parser');
 var transform = require('./ast-transformer');
 var compile = require('./../compiler');

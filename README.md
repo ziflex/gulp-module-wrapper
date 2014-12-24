@@ -16,7 +16,7 @@
 
 ## Usage
 
-Wrap the contents of the file, module will return the entire contents
+Process the contents of the file, module will return the entire contents
 
 ```javascript
 var wrap = require('gulp-module-wrapper');
@@ -28,7 +28,7 @@ gulp.task('wrap', function() {
 });
 ```
 
-Wrap the contents, with custom dependencies, callback params, and variable to return (exports)
+Process the contents, with custom dependencies, callback params, and variable to return (exports)
 
 ```javascript
 var wrap = require('gulp-module-wrapper');
@@ -36,22 +36,22 @@ var wrap = require('gulp-module-wrapper');
 gulp.task('wrap', function() {
   gulp.src('./lib/*.js')
     .pipe(wrap({
-      deps: ['jade'],          // dependency array
-      args: ['jade'],        // params for callback
+      deps: ['jade'],          // module's dependencies
+      args: ['jade'],          // module's arguments
       exports: 'jade',         // variable to return
-      root: 'templates/' // include a module name in the define() call, relative to moduleRoot
+      root: 'templates/'       // include a module name in the define() call, relative to moduleRoot
     }))
     .pipe(gulp.dest('./dist/'))
 });
 ```
 
-Specify options for specific file
+The same but for specific files
 
 ```javascript
 var wrap = require('gulp-module-wrapper');
 var options = {
   'app.js' : {
-    'name' : 'app'        // allowed to specify name, otherwise filename will be used
+    'name' : 'app'        // allowed to specify module name, otherwise filename will be used
     'deps' : ['router'],
     'args' : ['appRouter'],
     'exports' : 'app'
