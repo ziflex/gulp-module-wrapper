@@ -6,7 +6,7 @@
 </tr>
 <tr>
 <td>Description</td>
-<td>Wrap files with an module wrapper</td>
+<td>Uses AST for processing files to create modules (currently only AMD)</td>
 </tr>
 <tr>
 <td>Node Version</td>

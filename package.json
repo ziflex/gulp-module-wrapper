@@ -1,22 +1,22 @@
 {
   "name": "gulp-module-wrapper",
   "version": "0.1.2",
-  "description": "Creates modules.",
+  "description": "Process files to create modules.",
+  "author": "ziflex (Tim Voronov)",
+  "homepage": "https://github.com/ziflex/gulp-module-wrapper",
+  "repository": "git://github.com/ziflex/gulp-module-wrapper.git",
   "main": "index.js",
   "scripts": {
     "test": "gulp test"
   },
   "keywords": [
-    "amd",
-    "gulp",
     "gulpplugin",
     "module",
-    "wrap"
+    "amd"
   ],
   "engines": {
     "node": ">= 0.10"
   },
-  "author": "ziflex (Tim Voronov)",
   "license": "MIT",
   "dependencies": {
     "esprima": "^1.2.2",
