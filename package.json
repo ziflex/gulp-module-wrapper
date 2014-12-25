@@ -1,13 +1,15 @@
 {
   "name": "gulp-module-wrapper",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Process files to create modules.",
-  "author": "ziflex (Tim Voronov)",
+  "author": "ziflex <ziflex@gmail.com>",
   "homepage": "https://github.com/ziflex/gulp-module-wrapper",
   "repository": "git://github.com/ziflex/gulp-module-wrapper.git",
+  "bugs": "https://github.com/ziflex/gulp-module-wrapper/issues",
   "main": "index.js",
   "scripts": {
-    "test": "gulp test"
+    "test": "gulp test",
+    "build": "gulp"
   },
   "keywords": [
     "gulpplugin",
@@ -17,7 +19,12 @@
   "engines": {
     "node": ">= 0.10"
   },
-  "license": "MIT",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://raw.githubusercontent.com/ziflex/gulp-module-wrapper/master/LICENSE"
+    }
+  ],
   "dependencies": {
     "esprima": "^1.2.2",
     "gulp": "^3.8.10",
