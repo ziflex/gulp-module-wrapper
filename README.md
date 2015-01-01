@@ -69,6 +69,31 @@ gulp.task('wrap', function() {
 });
 ```
 
+Ignore files, for example, your AMD loader
+
+```javascript
+var wrap = require('gulp-module-wrapper');
+
+gulp.task('wrap', function() {
+  gulp.src('./lib/*.js')
+    .pipe(wrap({}, ['require.js']))
+    .pipe(gulp.dest('./dist/'))
+});
+```
+
+or matched by pattern
+
+```javascript
+var wrap = require('gulp-module-wrapper');
+
+gulp.task('wrap', function() {
+  gulp.src('./lib/*.js')
+    .pipe(wrap({}, ['my-amd-modules/*.js']))
+    .pipe(gulp.dest('./dist/'))
+});
+```
+For more information look [here](https://github.com/robrich/gulp-match/blob/master/README.md)
+
 All modules will get default dependencies like 'exports', 'require', 'module'.
 If module root is not specified, filename will be used for module's name.
 
