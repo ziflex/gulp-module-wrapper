@@ -27,7 +27,7 @@ function task() {
 }
 
 task('validate', function () {
-    return gulp.src(['./src/*.js', './src/ast/*.js'])
+    return gulp.src(['./src/*.js', './src/ast/*.js', '!./src/templates.js'])
         .pipe(jshint('.jshintrc'))
         .pipe(jshint.reporter(jshintStylish))
         .pipe(jshint.reporter('fail'));
@@ -39,7 +39,7 @@ task('build', ['validate'], function () {
         .pipe(wrap('templates["<%= file.relative.replace(\'.js\', \'\') %>"] = <%= contents %>;'))
         .pipe(concat('templates.js'))
         .pipe(wrap('var _ = require("lodash");\nvar templates = {};\n<%= contents %>\nmodule.exports = templates;'))
-        .pipe(gulp.dest('./src/templates'));
+        .pipe(gulp.dest('./src'));
 });
 
 task('test', ['build'], function () {

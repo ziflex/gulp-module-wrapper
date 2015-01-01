@@ -2,7 +2,9 @@
 <% if(data.exports){ %>
 <%= data.body %>
 return <%= data.exports %>;
-<% } else { %>
+<% } else if(data.exports === false) { %>
+<%= data.body %>
+<% } else {%>
 return <%= data.body %>
 <% } %>
 });

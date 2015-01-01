@@ -1,5 +1,5 @@
 'use strict';
-var templates = require('./templates/templates');
+var templates = require('./templates');
 var utils = require('./utils');
 
 function normalize(data) {

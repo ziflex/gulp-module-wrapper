@@ -41,7 +41,7 @@ describe('compiler', function () {
     });
 });
 
-describe('wrapper', function () {
+describe('amd', function () {
     it('should process single plain script', function (done) {
         var original = '';
         gulp.src(fixtures('./plain-script-1.js'))
@@ -210,6 +210,24 @@ describe('wrapper', function () {
             .pipe(assert.first(function (d) {
                 var result = normalize(d.contents.toString());
                 var expected = normalize('define("named-module-1",["require","exports","module","path/to/dep1", "path/to/dep2"],function (require,exports,module,pathToDep1,pathToDep2) {return console.log("named-module-1");});');
+
+                should.equal(result, expected);
+            }))
+            .pipe(assert.end(done));
+    });
+
+    it('should process single named module with native return value', function (done) {
+        var src = fixtures('./named-module-4.js');
+        var original = '';
+
+        gulp.src(src)
+            .pipe(content(function (result) {
+                original = result;
+            }))
+            .pipe(wrapper())
+            .pipe(assert.first(function (d) {
+                var result = normalize(d.contents.toString());
+                var expected = normalize('define("named-module-4",["require","exports","module"],function (require,exports,module) {var name = "named-module-4"; return name;});');
 
                 should.equal(result, expected);
             }))

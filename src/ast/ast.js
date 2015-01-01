@@ -8,14 +8,15 @@ module.exports = function (content, options) {
     var result;
 
     // try to update modules
-    result = parse(content, function (node) {
-        transform(node, options);
-    }).toString();
+    if (options.type === 'amd') {
+        result = parse(content, function (node) {
+            transform(node, options);
+        }).toString();
+    }
 
-    // for plain scripts
     if (content === result) {
         result = compile({
-            type: 'amd',
+            type: options.type,
             data: _.merge(options, {
                 body: content
             })

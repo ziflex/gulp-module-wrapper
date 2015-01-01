@@ -22,7 +22,10 @@ module.exports =  function (node, options) {
         // module init func
         if (arg.type === syntax.FunctionExpression) {
             structure.args = arg.params.map(function (x) { return x.name; });
-            structure.body = arg.body.body.map(function (x) {return x.source(); }).join('\n');
+            structure.body = arg.body.body.map(function (x) {
+                structure.exports = x.type === syntax.ReturnStatement;
+                return x.source();
+            }).join('\n');
         }
     });
 
@@ -31,7 +34,7 @@ module.exports =  function (node, options) {
     structure.deps = (options.deps || []).concat(structure.deps || []);
     structure.args = (options.args || []).concat(structure.args || []);
     structure.body = structure.body;
-    structure.exports = options.exports;
+    structure.exports = structure.exports  ? false : options.exports;
 
     if (structure.deps.length > structure.args.length) {
         structure.args = structure.args.concat(structure.deps.slice(structure.args.length));

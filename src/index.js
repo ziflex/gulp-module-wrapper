@@ -18,6 +18,7 @@ function getOptions(file, opts) {
         result;
 
     result  = _.defaults(_.clone(opts[filename] || opts), {
+        type: 'amd',
         root: null,
         name: null,
         deps: null,
