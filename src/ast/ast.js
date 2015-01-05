@@ -2,7 +2,7 @@
 var parse = require('./ast-parser');
 var transform = require('./ast-transformer');
 var compile = require('./../compiler');
-var _ = require('lodash');
+var merge = require('../structure');
 
 module.exports = function (content, options) {
     var result;
@@ -17,7 +17,7 @@ module.exports = function (content, options) {
     if (content === result) {
         result = compile({
             type: options.type,
-            data: _.merge(options, {
+            data: merge(options, {
                 body: content
             })
         });

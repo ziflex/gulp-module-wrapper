@@ -42,6 +42,8 @@ describe('compiler', function () {
 });
 
 describe('amd', function () {
+    this.timeout(15000);
+
     it('should process single plain script', function (done) {
         var original = '';
         gulp.src(fixtures('./plain-script-1.js'))
@@ -190,6 +192,30 @@ describe('amd', function () {
             .pipe(assert.first(function (d) {
                 var result = normalize(d.contents.toString());
                 var expected = normalize('define("named-module-1",["require","exports","module","dep1", "dep2"],function (require,exports,module,dep1,dep2) {return console.log("named-module-1");});');
+
+                should.equal(result, expected);
+            }))
+            .pipe(assert.end(done));
+    });
+
+    it('should process plain script with single custom dependency', function (done) {
+        var src = fixtures('./plain-script-2.js');
+        var original = '';
+        var options = {
+            'plain-script-2.js' : {
+                name: 'plain-script-2',
+                deps: ['dep'],
+                exports: 'name'
+            }
+        };
+        gulp.src(src)
+            .pipe(content(function (result) {
+                original = result;
+            }))
+            .pipe(wrapper(options))
+            .pipe(assert.first(function (d) {
+                var result = normalize(d.contents.toString());
+                var expected = normalize('define("plain-script-2",["require","exports","module","dep"],function (require,exports,module,dep) {var name = "plain-script-2"; console.log(name); return name;});');
 
                 should.equal(result, expected);
             }))

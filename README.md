@@ -76,7 +76,7 @@ var wrap = require('gulp-module-wrapper');
 
 gulp.task('wrap', function() {
   gulp.src('./lib/*.js')
-    .pipe(wrap({}, ['require.js']))
+    .pipe(wrap({}, ['**/require.js']))
     .pipe(gulp.dest('./dist/'))
 });
 ```
@@ -88,7 +88,7 @@ var wrap = require('gulp-module-wrapper');
 
 gulp.task('wrap', function() {
   gulp.src('./lib/*.js')
-    .pipe(wrap({}, ['my-amd-modules/*.js']))
+    .pipe(wrap({}, ['**/*.js']))
     .pipe(gulp.dest('./dist/'))
 });
 ```

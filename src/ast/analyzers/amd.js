@@ -1,5 +1,6 @@
 'use strict';
 var syntax = require('./../ast-syntax');
+var merge = require('../../structure');
 
 module.exports =  function (node, options) {
     var structure = {};
@@ -29,16 +30,5 @@ module.exports =  function (node, options) {
         }
     });
 
-
-    structure.name = options.name || structure.name;
-    structure.deps = (options.deps || []).concat(structure.deps || []);
-    structure.args = (options.args || []).concat(structure.args || []);
-    structure.body = structure.body;
-    structure.exports = structure.exports  ? false : options.exports;
-
-    if (structure.deps.length > structure.args.length) {
-        structure.args = structure.args.concat(structure.deps.slice(structure.args.length));
-    }
-
-    return structure;
+    return merge(options, structure);
 };
