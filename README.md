@@ -16,7 +16,7 @@
 
 ## Basic Usage
 
-Processes the content of the file, module will return the entire content
+Processes the content of the file, module will return the entire content  
 
 ```javascript
 var wrapper = require('gulp-module-wrapper');
@@ -28,7 +28,7 @@ gulp.task('wrap', function() {
 });
 ```
 
-Process the contents, with custom dependencies, callback params, and variable to return (exports)
+Process the contents, with custom dependencies, callback params, and variable to return (exports)  
 
 ```javascript
 var wrapper = require('gulp-module-wrapper');
@@ -45,7 +45,7 @@ gulp.task('wrap', function() {
 });
 ```
 
-The same but for specific files
+The same but for specific files  
 
 ```javascript
 var wrapper = require('gulp-module-wrapper');
@@ -69,7 +69,7 @@ gulp.task('wrap', function() {
 });
 ```
 
-Ignore files, for example, your AMD loader
+Ignore files, for example, your AMD loader  
 
 ```javascript
 var wrapper = require('gulp-module-wrapper');
@@ -81,7 +81,7 @@ gulp.task('wrap', function() {
 });
 ```
 
-or matched by pattern
+or matched by pattern  
 
 ```javascript
 var wrapper = require('gulp-module-wrapper');
@@ -92,15 +92,15 @@ gulp.task('wrap', function() {
     .pipe(gulp.dest('./dist/'))
 });
 ```
-For more information look [here](https://github.com/robrich/gulp-match/blob/master/README.md)
+For more information look [here](https://github.com/robrich/gulp-match/blob/master/README.md)  
 
-All modules will get default dependencies like 'exports', 'require', 'module'.
-If module root is not specified, filename will be used for module's name.
+All modules will get default dependencies like 'exports', 'require', 'module'.  
+If module root is not specified, filename will be used for module's name.  
 
 ### Module type
 
-Since v0.2.0 ``gulp-module-wrapper`` supports ``UMD`` modules.
-To selected required module type just passe the option ``type``:
+Since v0.2.0 ``gulp-module-wrapper`` supports ``UMD`` modules.  
+To selected required module type just passe the option ``type``:  
 
 ```javascript
 var wrapper = require('gulp-module-wrapper');
@@ -114,40 +114,40 @@ gulp.task('wrap', function() {
 });
 ```
 
-``amd`` is used by default.
+``amd`` is used by default.  
 
 ## API
 ### wrapper(options, [ignore])
 
 #### options.[file-name].type
-Type: `String`.
+Type: `String`.  
 Type of module. Supported types: `amd` && `umd`.  
-Default: `amd`.
+Default: `amd`.  
 
 #### options.[file-name].deps
-Type: `Array`.
-List of module dependencies.
-Note: All modules will get default dependencies like 'exports', 'require', 'module'.
+Type: `Array`.  
+List of module dependencies.  
+Note: All modules will get default dependencies like 'exports', 'require', 'module'.  
 
 ### options.[file-name].args
-Type: `Array`.
-List of module's constructor arguments.
-Default:  All module's constructors will get default arguments like 'exports', 'require', 'module'.
+Type: `Array`.  
+List of module's constructor arguments.  
+Default:  All module's constructors will get default arguments like 'exports', 'require', 'module'.  
 
 ### options.[file-name].root
-Type: `String`.
-Relative file's path.
+Type: `String`.  
+Relative file's path.  
 
 ### options.[file-name].name
-Type: `String`.
-Module name. Useful for separate options or one-file processing.
-Default: File name.
+Type: `String`.  
+Module name. Useful for separate options or one-file processing.  
+Default: File name.  
 
-Separate options can be mixed with global one, but separate options has higher priority.
+Separate options can be mixed with global one, but separate options has higher priority.  
 
 ### ignore
-Type: `Array`.
-List of files or glob patterns for files that should not be processed.
+Type: `Array`.  
+List of files or glob patterns for files that should not be processed.  
 
 ## LICENSE
 
