@@ -7,14 +7,16 @@ var merge = require('../structure');
 module.exports = function (content, options) {
     var result;
 
-    // try to update modules
+    // amd: try to update modules
     if (options.type === 'amd') {
         result = parse(content, function (node) {
             transform(node, options);
         }).toString();
     }
 
-    if (content === result) {
+    //umd: wrap plain script
+    //amd: wrap plain script
+    if (options.type === 'umd' || content === result) {
         result = compile({
             type: options.type,
             data: merge(options, {

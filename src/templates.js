@@ -40,11 +40,11 @@ with (obj) {
 __p += '(function (root, factory) {\r\n    if (typeof define === \'function\' && define.amd) {\r\n        define(' +
 ((__t = ( data.name ? JSON.stringify(data.name) + ',' : '' )) == null ? '' : __t) +
 '' +
-((__t = ( data.deps ? JSON.stringify(data.deps) + ',' : '[],' )) == null ? '' : __t) +
+((__t = ( data.deps ? JSON.stringify(data.deps) : '[]' )) == null ? '' : __t) +
 ', factory);\r\n    } else if (typeof exports === \'object\') {\r\n        var resolved = [];\r\n        var required = ' +
-((__t = ( data.deps ? JSON.stringify(data.deps) + ',' : '[],' )) == null ? '' : __t) +
+((__t = ( data.deps ? JSON.stringify(data.deps) : '[]' )) == null ? '' : __t) +
 ';\r\n\r\n        for (var i = 0; i < required.length; i += 1) {\r\n            resolved.push(require(required[i]));\r\n        }\r\n\r\n        module.exports = factory.apply({}, resolved);\r\n    } else {\r\n        var resolved = [];\r\n        var required = ' +
-((__t = ( data.deps ? JSON.stringify(data.deps) + ',' : '[],' )) == null ? '' : __t) +
+((__t = ( data.deps ? JSON.stringify(data.deps) : '[]' )) == null ? '' : __t) +
 ';\r\n\r\n        for (var i = 0; i < required.length; i += 1) {\r\n            resolved.push(root[required[i]]);\r\n        }\r\n\r\n        root.' +
 ((__t = ( data.name )) == null ? '' : __t) +
 ' = factory.apply({}, resolved);\r\n    }\r\n}(this, function (' +

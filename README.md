@@ -6,7 +6,7 @@
 </tr>
 <tr>
 <td>Description</td>
-<td>Uses AST for processing files to create modules (currently only AMD)</td>
+<td>Processes files to create AMD/UMD modules</td>
 </tr>
 <tr>
 <td>Node Version</td>
@@ -14,16 +14,16 @@
 </tr>
 </table>
 
-## Usage
+## Basic Usage
 
-Process the contents of the file, module will return the entire contents
+Processes the content of the file, module will return the entire content
 
 ```javascript
-var wrap = require('gulp-module-wrapper');
+var wrapper = require('gulp-module-wrapper');
 
 gulp.task('wrap', function() {
   gulp.src('./lib/*.js')
-    .pipe(wrap())
+    .pipe(wrapper())
     .pipe(gulp.dest('./dist/'))
 });
 ```
@@ -31,11 +31,11 @@ gulp.task('wrap', function() {
 Process the contents, with custom dependencies, callback params, and variable to return (exports)
 
 ```javascript
-var wrap = require('gulp-module-wrapper');
+var wrapper = require('gulp-module-wrapper');
 
 gulp.task('wrap', function() {
   gulp.src('./lib/*.js')
-    .pipe(wrap({
+    .pipe(wrapper({
       deps: ['jade'],          // module's dependencies
       args: ['jade'],          // module's arguments
       exports: 'jade',         // variable to return
@@ -48,7 +48,7 @@ gulp.task('wrap', function() {
 The same but for specific files
 
 ```javascript
-var wrap = require('gulp-module-wrapper');
+var wrapper = require('gulp-module-wrapper');
 var options = {
   'app.js' : {
     'name' : 'app'        // allowed to specify module name, otherwise filename will be used
@@ -64,7 +64,7 @@ var options = {
 
 gulp.task('wrap', function() {
   gulp.src('./lib/*.js')
-    .pipe(wrap(options))
+    .pipe(wrapper(options))
     .pipe(gulp.dest('./dist/'))
 });
 ```
@@ -72,11 +72,11 @@ gulp.task('wrap', function() {
 Ignore files, for example, your AMD loader
 
 ```javascript
-var wrap = require('gulp-module-wrapper');
+var wrapper = require('gulp-module-wrapper');
 
 gulp.task('wrap', function() {
   gulp.src('./lib/*.js')
-    .pipe(wrap({}, ['**/require.js']))
+    .pipe(wrapper({}, ['**/require.js']))
     .pipe(gulp.dest('./dist/'))
 });
 ```
@@ -84,11 +84,11 @@ gulp.task('wrap', function() {
 or matched by pattern
 
 ```javascript
-var wrap = require('gulp-module-wrapper');
+var wrapper = require('gulp-module-wrapper');
 
 gulp.task('wrap', function() {
   gulp.src('./lib/*.js')
-    .pipe(wrap({}, ['**/*.js']))
+    .pipe(wrapper({}, ['**/*.js']))
     .pipe(gulp.dest('./dist/'))
 });
 ```
@@ -96,6 +96,58 @@ For more information look [here](https://github.com/robrich/gulp-match/blob/mast
 
 All modules will get default dependencies like 'exports', 'require', 'module'.
 If module root is not specified, filename will be used for module's name.
+
+### Module type
+
+Since v0.2.0 ``gulp-module-wrapper`` supports ``UMD`` modules.
+To selected required module type just passe the option ``type``:
+
+```javascript
+var wrapper = require('gulp-module-wrapper');
+
+gulp.task('wrap', function() {
+  gulp.src('./lib/*.js')
+    .pipe(wrapper({
+      type: 'umd'
+    }))
+    .pipe(gulp.dest('./dist/'))
+});
+```
+
+``amd`` is used by default.
+
+## API
+### wrapper(options, [ignore])
+
+#### options.[file-name].type
+Type: `String`.
+Type of module. Supported types: `amd` && `umd`.  
+Default: `amd`.
+
+#### options.[file-name].deps
+Type: `Array`.
+List of module dependencies.
+Note: All modules will get default dependencies like 'exports', 'require', 'module'.
+
+### options.[file-name].args
+Type: `Array`.
+List of module's constructor arguments.
+Default:  All module's constructors will get default arguments like 'exports', 'require', 'module'.
+
+### options.[file-name].root
+Type: `String`.
+Relative file's path.
+
+### options.[file-name].name
+Type: `String`.
+Module name. Useful for separate options or one-file processing.
+Default: File name.
+
+Separate options can be mixed with global one, but separate options has higher priority.
+
+### ignore
+Type: `Array`.
+List of files or glob patterns for files that should not be processed.
 
 ## LICENSE
 

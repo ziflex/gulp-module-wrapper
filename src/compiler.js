@@ -13,7 +13,7 @@ function normalize(data) {
 }
 
 module.exports = function (options) {
-    var template = templates[options.type],
+    var template = templates[options.type.toLowerCase()],
         result = '';
 
     if (template) {

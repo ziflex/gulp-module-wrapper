@@ -1,9 +1,9 @@
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
-        define(<%= data.name ? JSON.stringify(data.name) + ',' : '' %><%= data.deps ? JSON.stringify(data.deps) + ',' : '[],' %>, factory);
+        define(<%= data.name ? JSON.stringify(data.name) + ',' : '' %><%= data.deps ? JSON.stringify(data.deps) : '[]' %>, factory);
     } else if (typeof exports === 'object') {
         var resolved = [];
-        var required = <%= data.deps ? JSON.stringify(data.deps) + ',' : '[],' %>;
+        var required = <%= data.deps ? JSON.stringify(data.deps) : '[]' %>;
 
         for (var i = 0; i < required.length; i += 1) {
             resolved.push(require(required[i]));
@@ -12,7 +12,7 @@
         module.exports = factory.apply({}, resolved);
     } else {
         var resolved = [];
-        var required = <%= data.deps ? JSON.stringify(data.deps) + ',' : '[],' %>;
+        var required = <%= data.deps ? JSON.stringify(data.deps) : '[]' %>;
 
         for (var i = 0; i < required.length; i += 1) {
             resolved.push(root[required[i]]);
