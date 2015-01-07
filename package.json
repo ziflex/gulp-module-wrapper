@@ -1,6 +1,6 @@
 {
   "name": "gulp-module-wrapper",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Process files to create modules.",
   "author": "ziflex <ziflex@gmail.com>",
   "homepage": "https://github.com/ziflex/gulp-module-wrapper",
@@ -14,7 +14,9 @@
   "keywords": [
     "gulpplugin",
     "module",
-    "amd"
+    "amd",
+    "umd",
+    "commonjs"
   ],
   "engines": {
     "node": ">= 0.10"

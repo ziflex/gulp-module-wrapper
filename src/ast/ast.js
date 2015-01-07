@@ -16,7 +16,7 @@ module.exports = function (content, options) {
 
     //umd: wrap plain script
     //amd: wrap plain script
-    if (options.type === 'umd' || content === result) {
+    if (options.type === 'umd' || options.type === 'commonjs' || content === result) {
         result = compile({
             type: options.type,
             data: merge(options, {

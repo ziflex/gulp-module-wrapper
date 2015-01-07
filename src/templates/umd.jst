@@ -18,9 +18,9 @@
             resolved.push(root[required[i]]);
         }
 
-        root.<%= data.name %> = factory.apply({}, resolved);
+        root['<%= data.name %>'] = factory.apply({}, resolved);
     }
-}(this, function (<%= (!data.args ? [] : data.args.join(',')).toString() %>) {
+}(this, function (<%= (data.args ? data.args.join(',') : []).toString() %>) {
     <% if(data.exports){ %>
     <%= data.body %>
     return <%= data.exports %>;

@@ -32,6 +32,44 @@ __p += '\r\n});';
 }
 return __p
 };
+templates["commonjs"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+
+ if(data.deps && data.deps.length){ ;
+__p += '\r\n';
+ for (var i = 0; i < data.deps.length; i += 1) { ;
+__p += '\r\nvar ' +
+((__t = ( data.args && data.args.length ? data.args [i] : data.deps[i])) == null ? '' : __t) +
+' = require(\'' +
+((__t = ( data.deps[i] )) == null ? '' : __t) +
+'\');\r\n';
+ } ;
+__p += '\r\n';
+ } ;
+__p += '\r\n\r\n';
+ if(data.exports){ ;
+__p += '\r\n' +
+((__t = ( data.body )) == null ? '' : __t) +
+'\r\nexports[\'' +
+((__t = ( data.name )) == null ? '' : __t) +
+'\'] = ' +
+((__t = ( data.exports )) == null ? '' : __t) +
+';\r\n';
+ } else { ;
+__p += '\r\nexports[\'' +
+((__t = ( data.name )) == null ? '' : __t) +
+'\'] = ' +
+((__t = ( data.body )) == null ? '' : __t) +
+'\r\n';
+ } ;
+
+
+}
+return __p
+};
 templates["umd"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
@@ -45,10 +83,10 @@ __p += '(function (root, factory) {\r\n    if (typeof define === \'function\' &&
 ((__t = ( data.deps ? JSON.stringify(data.deps) : '[]' )) == null ? '' : __t) +
 ';\r\n\r\n        for (var i = 0; i < required.length; i += 1) {\r\n            resolved.push(require(required[i]));\r\n        }\r\n\r\n        module.exports = factory.apply({}, resolved);\r\n    } else {\r\n        var resolved = [];\r\n        var required = ' +
 ((__t = ( data.deps ? JSON.stringify(data.deps) : '[]' )) == null ? '' : __t) +
-';\r\n\r\n        for (var i = 0; i < required.length; i += 1) {\r\n            resolved.push(root[required[i]]);\r\n        }\r\n\r\n        root.' +
+';\r\n\r\n        for (var i = 0; i < required.length; i += 1) {\r\n            resolved.push(root[required[i]]);\r\n        }\r\n\r\n        root[\'' +
 ((__t = ( data.name )) == null ? '' : __t) +
-' = factory.apply({}, resolved);\r\n    }\r\n}(this, function (' +
-((__t = ( (!data.args ? [] : data.args.join(',')).toString() )) == null ? '' : __t) +
+'\'] = factory.apply({}, resolved);\r\n    }\r\n}(this, function (' +
+((__t = ( (data.args ? data.args.join(',') : []).toString() )) == null ? '' : __t) +
 ') {\r\n    ';
  if(data.exports){ ;
 __p += '\r\n    ' +

@@ -217,143 +217,261 @@ describe('amd', function () {
 });
 
 describe('umd', function () {
+    function mock(options, content) {
+        var name = options.name ? options.name :'';
+        var deps = options.deps ? JSON.stringify(options.deps) : '[]';
+        var args = (options.args ? options.args.join(',') : []).toString();
+        var exports = options.exports ? 'return ' + options.exports + ';' : '';
+        content = exports ? content : 'return ' + content;
+
+        var result = '(function (root, factory) {';
+        result += 'if (typeof define === "function" && define.amd) {';
+        result += 'define("'+(name ? name : '') +'" ' + (name ? ',' : '') + ' '+deps+', factory);';
+        result += '    } else if (typeof exports === "object") {';
+        result += 'var resolved = [];';
+        result += 'var required = '+deps+';';
+        result += 'for (var i = 0; i < required.length; i += 1) {';
+        result += 'resolved.push(require(required[i]));';
+        result += '}';
+        result += 'module.exports = factory.apply({}, resolved);';
+        result += '} else {';
+        result += 'var resolved = [];';
+        result += 'var required = ' + deps + ';';
+        result += 'for (var i = 0; i < required.length; i += 1) {';
+        result += 'resolved.push(root[required[i]]);';
+        result += '}';
+        result += 'root["' + name + '"] = factory.apply({}, resolved);';
+        result += '}';
+        result += '}(this, function (' + args + ') {';
+        result += content;
+        result += exports;
+        result += '}));';
+
+        return result;
+    }
+
     it('should wrap with default settings', function (done) {
-        var original = '';
+        var original = '',
+            options = {
+                type: 'umd'
+            };
+
         gulp.src(fixtures('./plain-script-1.js'))
             .pipe(content(function (result) {
                 original = result;
             }))
-            .pipe(wrapper({
-                type: 'umd'
-            }))
+            .pipe(wrapper(options))
             .pipe(assert.first(function (d) {
-                var result = normalize(d.contents.toString());
-                var expected = normalize(compile({
-                    type: 'umd',
-                    data: {
-                        name: 'plain-script-1',
-                        deps: ['require', 'exports', 'module'],
-                        args: ['require', 'exports', 'module'],
-                        body: original
-                    }
-                }));
-
-                should.equal(result, expected);
+                options.name = 'plain-script-1';
+                options.deps = ['require', 'exports', 'module'].concat(options.deps || []);
+                options.args = ['require', 'exports', 'module'].concat(options.args || []);
+                should.equal(normalize(d.contents.toString()), normalize(mock(options, original)));
             }))
             .pipe(assert.end(done));
     });
 
     it('should wrap with specific name', function (done) {
-        var original = '';
+        var original = '',
+            options = {
+                type: 'umd',
+                name: 'umd-module'
+            };
         gulp.src(fixtures('./plain-script-1.js'))
             .pipe(content(function (result) {
                 original = result;
             }))
-            .pipe(wrapper({
-                type: 'umd',
-                name: 'umd-module'
-            }))
+            .pipe(wrapper(options))
             .pipe(assert.first(function (d) {
-                var result = normalize(d.contents.toString());
-                var expected = normalize(compile({
-                    type: 'umd',
-                    data: {
-                        name: 'umd-module',
-                        deps: ['require', 'exports', 'module'],
-                        args: ['require', 'exports', 'module'],
-                        body: original
-                    }
-                }));
-
-                should.equal(result, expected);
+                options.deps = ['require', 'exports', 'module'].concat(options.deps || []);
+                options.args = ['require', 'exports', 'module'].concat(options.args || []);
+                should.equal(normalize(d.contents.toString()), normalize(mock(options, original)));
             }))
             .pipe(assert.end(done));
     });
 
     it('should wrap with specific name and dependencies', function (done) {
-        var original = '';
+        var original = '',
+            options = {
+                type: 'umd',
+                name: 'umd-module',
+                deps: ['dep1', 'dep2']
+            };
         gulp.src(fixtures('./plain-script-1.js'))
             .pipe(content(function (result) {
                 original = result;
             }))
-            .pipe(wrapper({
-                type: 'umd',
-                name: 'umd-module',
-                deps: ['dep1', 'dep2']
-            }))
+            .pipe(wrapper(options))
             .pipe(assert.first(function (d) {
-                var result = normalize(d.contents.toString());
-                var expected = normalize(compile({
-                    type: 'umd',
-                    data: {
-                        name: 'umd-module',
-                        deps: ['require', 'exports', 'module', 'dep1', 'dep2'],
-                        args: ['require', 'exports', 'module', 'dep1', 'dep2'],
-                        body: original
-                    }
-                }));
+                options.args = ['require', 'exports', 'module'].concat(options.deps || []);
+                options.deps = ['require', 'exports', 'module'].concat(options.deps || []);
 
-                should.equal(result, expected);
+                should.equal(normalize(d.contents.toString()), normalize(mock(options, original)));
             }))
             .pipe(assert.end(done));
     });
 
     it('should wrap with specific name, dependencies and overridden arguments', function (done) {
-        var original = '';
-        gulp.src(fixtures('./plain-script-1.js'))
-            .pipe(content(function (result) {
-                original = result;
-            }))
-            .pipe(wrapper({
+        var original = '',
+            options = {
                 type: 'umd',
                 name: 'umd-module',
                 deps: ['dep1', 'dep2'],
                 args: ['depOne', 'depTwo']
-            }))
-            .pipe(assert.first(function (d) {
-                var result = normalize(d.contents.toString());
-                var expected = normalize(compile({
-                    type: 'umd',
-                    data: {
-                        name: 'umd-module',
-                        deps: ['require', 'exports', 'module', 'dep1', 'dep2'],
-                        args: ['require', 'exports', 'module', 'depOne', 'depTwo'],
-                        body: original
-                    }
-                }));
-
-                should.equal(result, expected);
-            }))
-            .pipe(assert.end(done));
-    });
-
-    it('should wrap with specific name, dependencies, overridden arguments and custom reutrn', function (done) {
-        var original = '';
+            };
         gulp.src(fixtures('./plain-script-1.js'))
             .pipe(content(function (result) {
                 original = result;
             }))
-            .pipe(wrapper({
-                type: 'umd',
-                name: 'umd-module',
+            .pipe(wrapper(options))
+            .pipe(assert.first(function (d) {
+                options.deps = ['require', 'exports', 'module'].concat(options.deps || []);
+                options.args = ['require', 'exports', 'module'].concat(options.args || []);
+                should.equal(normalize(d.contents.toString()), normalize(mock(options, original)));
+            }))
+            .pipe(assert.end(done));
+    });
+
+    it('should wrap with specific name, dependencies, overridden arguments and custom return', function (done) {
+        var original = '';
+        var options = {
+            type: 'umd',
+            name: 'umd-module',
+            deps: ['dep1', 'dep2'],
+            args: ['depOne', 'depTwo'],
+            exports: '"hello world!"'
+        };
+        gulp.src(fixtures('./plain-script-1.js'))
+            .pipe(content(function (result) {
+                original = result;
+            }))
+            .pipe(wrapper(options))
+            .pipe(assert.first(function (d) {
+                options.deps = ['require', 'exports', 'module'].concat(options.deps);
+                options.args = ['require', 'exports', 'module'].concat(options.args);
+                should.equal(normalize(d.contents.toString()), normalize(mock(options, original)));
+            }))
+            .pipe(assert.end(done));
+    });
+});
+
+describe('commonjs', function () {
+
+    function mock(options, content) {
+        var result = '';
+
+        if (options.deps) {
+            for (var i = 0; i < options.deps.length; i += 1) {
+                var dep = options.deps[i];
+                var arg = options.args[i];
+                result += 'var ' + (arg ? arg : dep) + ' = require("' + dep + '");';
+            }
+        }
+
+        if(options.exports){
+            result += content;
+            result += 'exports["' + options.name + '"] = ' + options.exports + ';';
+        } else {
+            result += 'exports["' + options.name + '"] = ' + content;
+        }
+
+        return result;
+    }
+
+    it('should wrap with default settings', function (done) {
+        var original = '',
+            options = {
+                type: 'commonjs'
+            };
+        gulp.src(fixtures('./plain-script-3.js'))
+            .pipe(content(function (result) {
+                original = result;
+            }))
+            .pipe(wrapper(options))
+            .pipe(assert.first(function (d) {
+                options.name = 'plain-script-3';
+                should.equal(normalize(d.contents.toString()), normalize(mock(options, original)));
+            }))
+            .pipe(assert.end(done));
+    });
+
+    it('should wrap with dependencies', function (done) {
+        var original = '',
+            options = {
+                type: 'commonjs',
+                deps: ['dep1', 'dep2']
+            };
+
+        gulp.src(fixtures('./plain-script-3.js'))
+            .pipe(content(function (result) {
+                original = result;
+            }))
+            .pipe(wrapper(options))
+            .pipe(assert.first(function (d) {
+                options.name = 'plain-script-3';
+                options.args = options.deps;
+                should.equal(normalize(d.contents.toString()), normalize(mock(options, original)));
+            }))
+            .pipe(assert.end(done));
+    });
+
+    it('should wrap with dependencies and overridden arguments', function (done) {
+        var original = '',
+            options = {
+                type: 'commonjs',
+                deps: ['dep1', 'dep2'],
+                args: ['depOne', 'depTwo']
+            };
+
+        gulp.src(fixtures('./plain-script-3.js'))
+            .pipe(content(function (result) {
+                original = result;
+            }))
+            .pipe(wrapper(options))
+            .pipe(assert.first(function (d) {
+                options.name = 'plain-script-3';
+                should.equal(normalize(d.contents.toString()), normalize(mock(options, original)));
+            }))
+            .pipe(assert.end(done));
+    });
+
+    it('should wrap with dependencies, overridden arguments and custom return', function (done) {
+        var original = '',
+            options = {
+                type: 'commonjs',
                 deps: ['dep1', 'dep2'],
                 args: ['depOne', 'depTwo'],
-                exports: '"hello world!";'
-            }))
-            .pipe(assert.first(function (d) {
-                var result = normalize(d.contents.toString());
-                var expected = normalize(compile({
-                    type: 'umd',
-                    data: {
-                        name: 'umd-module',
-                        deps: ['require', 'exports', 'module', 'dep1', 'dep2'],
-                        args: ['require', 'exports', 'module', 'depOne', 'depTwo'],
-                        body: original,
-                        exports: '"hello world!";'
-                    }
-                }));
+                exports: 'testModule'
+            };
 
-                should.equal(result, expected);
+        gulp.src(fixtures('./plain-script-3.js'))
+            .pipe(content(function (result) {
+                original = result;
+            }))
+            .pipe(wrapper(options))
+            .pipe(assert.first(function (d) {
+                options.name = 'plain-script-3';
+                should.equal(normalize(d.contents.toString()), normalize(mock(options, original)));
+            }))
+            .pipe(assert.end(done));
+    });
+
+    it('should wrap with specific name, dependencies, overridden arguments and custom return', function (done) {
+        var original = '',
+            options = {
+                type: 'commonjs',
+                name: 'customName',
+                deps: ['dep1', 'dep2'],
+                args: ['depOne', 'depTwo'],
+                exports: 'testModule'
+            };
+
+        gulp.src(fixtures('./plain-script-3.js'))
+            .pipe(content(function (result) {
+                original = result;
+            }))
+            .pipe(wrapper(options))
+            .pipe(assert.first(function (d) {
+                should.equal(normalize(d.contents.toString()), normalize(mock(options, original)));
             }))
             .pipe(assert.end(done));
     });

@@ -1,0 +1,12 @@
+<% if(data.deps && data.deps.length){ %>
+<% for (var i = 0; i < data.deps.length; i += 1) { %>
+var <%= data.args && data.args.length ? data.args [i] : data.deps[i]%> = require('<%= data.deps[i] %>');
+<% } %>
+<% } %>
+
+<% if(data.exports){ %>
+<%= data.body %>
+exports['<%= data.name %>'] = <%= data.exports %>;
+<% } else { %>
+exports['<%= data.name %>'] = <%= data.body %>
+<% } %>

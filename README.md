@@ -6,7 +6,7 @@
 </tr>
 <tr>
 <td>Description</td>
-<td>Processes files to create AMD/UMD modules</td>
+<td>Processes files to create AMD/UMD/CommonJS modules</td>
 </tr>
 <tr>
 <td>Node Version</td>
@@ -99,7 +99,7 @@ If module root is not specified, filename will be used for module's name.
 
 ### Module type
 
-Since v0.2.0 ``gulp-module-wrapper`` supports ``UMD`` modules.  
+``gulp-module-wrapper`` supports different module types: ``amd``, ``umd``, ``commonjs``
 To selected required module type just passe the option ``type``:  
 
 ```javascript
@@ -114,7 +114,7 @@ gulp.task('wrap', function() {
 });
 ```
 
-``amd`` is used by default.  
+``amd`` is used by default.
 
 ## API
 ### wrapper(options, [ignore])

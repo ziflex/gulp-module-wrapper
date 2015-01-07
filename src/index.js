@@ -11,10 +11,7 @@ var PLUGIN_NAME = 'gulp-module-wrapper';
 
 function getOptions(file, opts) {
     var filename = path.basename(file.path),
-        defaults = {
-            deps: ['require', 'exports', 'module'],
-            args: ['require', 'exports', 'module']
-        },
+        defaults = { deps: [], args: [] },
         result;
 
     result  = _.defaults(_.clone(opts[filename] || opts), {
@@ -26,6 +23,11 @@ function getOptions(file, opts) {
         exports: null,
         file: file
     });
+
+    if (opts.type !== 'commonjs') {
+        defaults.deps = ['require', 'exports', 'module'].concat(defaults.deps);
+        defaults.args = ['require', 'exports', 'module'].concat(defaults.args);
+    }
 
     result.deps = defaults.deps.concat(result.deps || []);
     result.args = defaults.args.concat(result.args || []);
