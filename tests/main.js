@@ -1,13 +1,18 @@
-var fs = require('fs');
 var through = require('through2');
 var should = require('should');
 var path = require('path');
 var assert = require('stream-assert');
 var gulp = require('gulp');
+var jshint = require('gulp-jshint');
+var jshintStylish = require('jshint-stylish');
 require('mocha');
 
 var wrapper = require('../');
 var compile = require('../src/compiler');
+
+function jsHintConfig() {
+    return path.join(__dirname, '.jshintrc');
+}
 
 function fixtures (glob) {
     return path.join(__dirname, 'fixtures', glob);
@@ -32,9 +37,7 @@ describe('compiler', function () {
         var options = {
             type: 'amd',
             data: {
-                factory: {
-                    body: ''
-                }
+                body: ''
             }
         };
         compile(options).should.not.eql('');
@@ -214,6 +217,26 @@ describe('amd', function () {
             }))
             .pipe(assert.end(done));
     });
+
+    it('should not have syntax errors', function (done) {
+        var options = {
+            type: 'commonjs',
+            name: 'customName',
+            deps: ['dep1', 'dep2'],
+            args: ['depOne', 'depTwo'],
+            exports: 'testModule'
+        };
+
+        gulp.src(fixtures('./plain-script-3.js'))
+            .pipe(wrapper(options))
+            .pipe(jshint(jsHintConfig()))
+            .pipe(jshint.reporter(jshintStylish))
+            .pipe(jshint.reporter('fail'))
+            .pipe(assert.first(function (d) {
+                d.jshint.success.should.be.eql(true);
+            }))
+            .pipe(assert.end(done));
+    });
 });
 
 describe('umd', function () {
@@ -225,19 +248,16 @@ describe('umd', function () {
         content = exports ? content : 'return ' + content;
 
         var result = '(function (root, factory) {';
+        result += 'var resolved = [], required = '+deps+', i, len = required.length;';
         result += 'if (typeof define === "function" && define.amd) {';
         result += 'define("'+(name ? name : '') +'" ' + (name ? ',' : '') + ' '+deps+', factory);';
         result += '    } else if (typeof exports === "object") {';
-        result += 'var resolved = [];';
-        result += 'var required = '+deps+';';
-        result += 'for (var i = 0; i < required.length; i += 1) {';
+        result += 'for (i = 0; i < len; i += 1) {';
         result += 'resolved.push(require(required[i]));';
         result += '}';
         result += 'module.exports = factory.apply({}, resolved);';
         result += '} else {';
-        result += 'var resolved = [];';
-        result += 'var required = ' + deps + ';';
-        result += 'for (var i = 0; i < required.length; i += 1) {';
+        result += 'for (i = 0; i < len; i += 1) {';
         result += 'resolved.push(root[required[i]]);';
         result += '}';
         result += 'root["' + name + '"] = factory.apply({}, resolved);';
@@ -352,6 +372,26 @@ describe('umd', function () {
             }))
             .pipe(assert.end(done));
     });
+
+    it('should not have syntax errors', function (done) {
+        var options = {
+            type: 'umd',
+            name: 'umd-module',
+            deps: ['dep1', 'dep2'],
+            args: ['depOne', 'depTwo'],
+            exports: '"hello world!"'
+        };
+
+        gulp.src(fixtures('./plain-script-1.js'))
+            .pipe(wrapper(options))
+            .pipe(jshint(jsHintConfig()))
+            .pipe(jshint.reporter(jshintStylish))
+            .pipe(jshint.reporter('fail'))
+            .pipe(assert.first(function (d) {
+                d.jshint.success.should.be.eql(true);
+            }))
+            .pipe(assert.end(done));
+    });
 });
 
 describe('commonjs', function () {
@@ -371,7 +411,7 @@ describe('commonjs', function () {
             result += content;
             result += 'exports["' + options.name + '"] = ' + options.exports + ';';
         } else {
-            result += 'exports["' + options.name + '"] = ' + content;
+            result += 'exports["' + options.name + '"] = ' + content + ';';
         }
 
         return result;
@@ -472,6 +512,26 @@ describe('commonjs', function () {
             .pipe(wrapper(options))
             .pipe(assert.first(function (d) {
                 should.equal(normalize(d.contents.toString()), normalize(mock(options, original)));
+            }))
+            .pipe(assert.end(done));
+    });
+
+    it('should not have syntax errors', function (done) {
+        var options = {
+            type: 'commonjs',
+            name: 'customName',
+            deps: ['dep1', 'dep2'],
+            args: ['depOne', 'depTwo'],
+            exports: 'testModule'
+        };
+
+        gulp.src(fixtures('./plain-script-3.js'))
+            .pipe(wrapper(options))
+            .pipe(jshint(jsHintConfig()))
+            .pipe(jshint.reporter(jshintStylish))
+            .pipe(jshint.reporter('fail'))
+            .pipe(assert.first(function (d) {
+                d.jshint.success.should.be.eql(true);
             }))
             .pipe(assert.end(done));
     });

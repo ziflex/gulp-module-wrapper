@@ -1,10 +1,10 @@
 ﻿define(<%= data.name ? JSON.stringify(data.name) + ',' : '' %><%= data.deps ? JSON.stringify(data.deps) + ',' : '[],' %>function(<%= (!data.args ? [] : data.args.join(',')).toString() %>){
 <% if(data.exports){ %>
 <%= data.body %>
-return <%= data.exports %>;
+return <%= data.exports %><%= data.exports[data.exports.length - 1] === ';' ? '' : ';' %>
 <% } else if(data.exports === false) { %>
-<%= data.body %>
+<%= data.body %><%= data.body[data.body.length - 1] === ';' ? '' : ';' %>
 <% } else {%>
-return <%= data.body %>
+return <%= data.body %><%= data.body[data.body.length - 1] === ';' ? '' : ';' %>
 <% } %>
 });

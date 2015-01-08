@@ -1,30 +1,30 @@
 (function (root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        define(<%= data.name ? JSON.stringify(data.name) + ',' : '' %><%= data.deps ? JSON.stringify(data.deps) : '[]' %>, factory);
-    } else if (typeof exports === 'object') {
-        var resolved = [];
-        var required = <%= data.deps ? JSON.stringify(data.deps) : '[]' %>;
+    var resolved = [],
+        required = <%= data.deps ? JSON.stringify(data.deps) : '[]' %>,
+        i, len = required.length;
 
-        for (var i = 0; i < required.length; i += 1) {
+    if (typeof define === "function" && define.amd) {
+        define(<%= data.name ? JSON.stringify(data.name) + ',' : '' %><%= data.deps ? JSON.stringify(data.deps) : '[]' %>, factory);
+    } else if (typeof exports === "object") {
+        for (i = 0; i < len; i += 1) {
             resolved.push(require(required[i]));
         }
 
         module.exports = factory.apply({}, resolved);
     } else {
-        var resolved = [];
-        var required = <%= data.deps ? JSON.stringify(data.deps) : '[]' %>;
-
-        for (var i = 0; i < required.length; i += 1) {
+        for (i = 0; i < len; i += 1) {
             resolved.push(root[required[i]]);
         }
 
-        root['<%= data.name %>'] = factory.apply({}, resolved);
+        root["<%= data.name %>"] = factory.apply({}, resolved);
     }
 }(this, function (<%= (data.args ? data.args.join(',') : []).toString() %>) {
     <% if(data.exports){ %>
     <%= data.body %>
-    return <%= data.exports %>;
+    return <%= data.exports %><%= data.exports[data.exports.length - 1] === ';' ? '' : ';' %>
+    <% } else if(data.exports === false) { %>
+    <%= data.body %><%= data.body[data.body.length - 1] === ';' ? '' : ';' %>
     <% } else { %>
-    return <%= data.body %>
+    return <%= data.body %><%= data.body[data.body.length - 1] === ';' ? '' : ';' %>
     <% } %>
 }));

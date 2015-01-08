@@ -1,1 +1,1 @@
-console.log('plain-script-1');
+console.log("plain-script-1");
