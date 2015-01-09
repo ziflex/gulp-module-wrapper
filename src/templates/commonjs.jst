@@ -6,9 +6,9 @@ var <%= data.args && data.args.length ? data.args [i] : data.deps[i]%> = require
 
 <% if(data.exports){ %>
 <%= data.body %>
-exports["<%= data.name %>"] = <%= data.exports %><%= data.exports[data.exports.length - 1] === ';' ? '' : ';' %>
+module.exports = <%= data.exports %><%= data.exports[data.exports.length - 1] === ';' ? '' : ';' %>
 <% } else if(data.exports === false) { %>
 <%= data.body %><%= data.body[data.body.length - 1] === ';' ? '' : ';' %>
 <% } else { %>
-exports["<%= data.name %>"] = <%= data.body %><%= data.body[data.body.length - 1] === ';' ? '' : ';' %>
+module.exports = <%= data.body %><%= data.body[data.body.length - 1] === ';' ? '' : ';' %>
 <% } %>

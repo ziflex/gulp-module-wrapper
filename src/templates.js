@@ -59,9 +59,7 @@ __p += '\r\n\r\n';
  if(data.exports){ ;
 __p += '\r\n' +
 ((__t = ( data.body )) == null ? '' : __t) +
-'\r\nexports["' +
-((__t = ( data.name )) == null ? '' : __t) +
-'"] = ' +
+'\r\nmodule.exports = ' +
 ((__t = ( data.exports )) == null ? '' : __t) +
 '' +
 ((__t = ( data.exports[data.exports.length - 1] === ';' ? '' : ';' )) == null ? '' : __t) +
@@ -73,9 +71,7 @@ __p += '\r\n' +
 ((__t = ( data.body[data.body.length - 1] === ';' ? '' : ';' )) == null ? '' : __t) +
 '\r\n';
  } else { ;
-__p += '\r\nexports["' +
-((__t = ( data.name )) == null ? '' : __t) +
-'"] = ' +
+__p += '\r\nmodule.exports = ' +
 ((__t = ( data.body )) == null ? '' : __t) +
 '' +
 ((__t = ( data.body[data.body.length - 1] === ';' ? '' : ';' )) == null ? '' : __t) +

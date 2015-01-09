@@ -409,9 +409,9 @@ describe('commonjs', function () {
 
         if(options.exports){
             result += content;
-            result += 'exports["' + options.name + '"] = ' + options.exports + ';';
+            result += 'module.exports = ' + options.exports + ';';
         } else {
-            result += 'exports["' + options.name + '"] = ' + content + ';';
+            result += 'module.exports = ' + content + ';';
         }
 
         return result;
