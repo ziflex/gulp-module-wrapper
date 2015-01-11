@@ -121,7 +121,8 @@ gulp.task('wrap', function() {
 
 #### options.[file-name].type  
 Type: `String`.  
-Type of module. Supported types: `amd` && `umd`.  
+Type of module. 
+Supported types: `amd`, `umd`, ``commonjs``.  
 Default: `amd`.  
 
 ### options.[file-name].root  
