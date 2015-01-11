@@ -46,6 +46,21 @@ describe('compiler', function () {
 
 describe('amd', function () {
 
+    function mock(options, content) {
+        var name = options.name ? options.name  : '';
+        var deps = options.deps ? JSON.stringify(options.deps) : '[]';
+        var args = (options.args ? options.args.join(',') : []).toString();
+        var exports = options.exports ? 'return ' + options.exports + ';' : '';
+        content = exports ? content : 'return ' + content + ';';
+
+        var result = 'define("' + name +'",' + deps + ', function (' + args + ') {';
+        result += content;
+        result += exports;
+        result += '});';
+
+        return result;
+    }
+
     it('should process single plain script', function (done) {
         gulp.src(fixtures('./plain-script-1.js'))
             .pipe(wrapper())
@@ -234,6 +249,25 @@ describe('amd', function () {
             .pipe(jshint.reporter('fail'))
             .pipe(assert.first(function (d) {
                 d.jshint.success.should.be.eql(true);
+            }))
+            .pipe(assert.end(done));
+    });
+
+    it('should process JSON file', function (done) {
+        var original,
+            src = fixtures('./fixture.json');
+
+        gulp.src(src)
+            .pipe(content(function (result) {
+                original = result;
+            }))
+            .pipe(wrapper())
+            .pipe(assert.first(function (d) {
+                var options = {};
+                options.name = 'fixture';
+                options.deps = ['require', 'exports', 'module'];
+                options.args = ['require', 'exports', 'module'];
+                should.equal(normalize(d.contents.toString()), normalize(mock(options, original)));
             }))
             .pipe(assert.end(done));
     });

@@ -14,6 +14,25 @@ function parametrize(str) {
     return result;
 }
 
+function isJSON(str) {
+    var firstChar = '',
+        lastChar = '',
+        result = false;
+
+    if (str) {
+        if (str.trim()) {
+            firstChar = str[0];
+            lastChar = str[str.length -1];
+
+            result = (firstChar === '{' || firstChar === '[') &&
+            (lastChar === '}' || lastChar === ']');
+        }
+    }
+
+    return result;
+}
+
 module.exports = {
-    parametrize: parametrize
+    parametrize: parametrize,
+    isJSON: isJSON
 };

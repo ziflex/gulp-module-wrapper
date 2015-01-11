@@ -1,5 +1,6 @@
 'use strict';
 var parse = require('esprima').parse;
+var utils = require('../utils');
 
 var objectKeys = Object.keys || function (obj) {
         var keys = [];
@@ -69,6 +70,10 @@ module.exports = function (src, opts, fn) {
 
     if (typeof src !== 'string') {
         src = String(src);
+    }
+
+    if (utils.isJSON(src)) {
+        return src;
     }
 
     var ast = parse(src, opts);

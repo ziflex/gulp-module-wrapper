@@ -24,7 +24,7 @@ function getOptions(file, opts) {
         file: file
     });
 
-    if (opts.type !== 'commonjs') {
+    if (result.type !== 'commonjs') {
         defaults.deps = ['require', 'exports', 'module'].concat(defaults.deps);
         defaults.args = ['require', 'exports', 'module'].concat(defaults.args);
     }
