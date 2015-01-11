@@ -1,5 +1,5 @@
 ﻿'use strict';
-var ast = require('./ast/ast');
+var compile = require('./compiler');
 var utils = require('gulp-util');
 var match = require('gulp-match');
 var _ = require('lodash');
@@ -40,6 +40,10 @@ function getOptions(file, opts) {
         result.name = path.basename(result.file.path, path.extname(result.file.path));
     }
 
+    if (opts.name === false) {
+        result.name = null;
+    }
+
     return result;
 }
 
@@ -63,7 +67,7 @@ module.exports = function (options, ignore) {
 
             if (file.isBuffer()) {
                 try {
-                    file.contents = new Buffer(ast(String(file.contents), opts));
+                    file.contents = new Buffer(compile(String(file.contents), opts));
                 } catch (ex) {
                     return err(ex.message);
                 }

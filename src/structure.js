@@ -2,6 +2,7 @@
 module.exports = function (options, structure) {
     var result = {};
 
+    result.type = structure.type || options.type;
     result.name = options.name || structure.name;
     result.deps = (options.deps || []).concat(structure.deps || []);
     result.args = (options.args || []).concat(structure.args || []);

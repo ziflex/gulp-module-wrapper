@@ -32,7 +32,21 @@ function isJSON(str) {
     return result;
 }
 
+function endsWith(str, criteria) {
+    var result = false;
+
+    str = str || '';
+    criteria = criteria || '';
+
+    if (str && criteria) {
+        result = str[str.length - 1] === criteria;
+    }
+
+    return result;
+}
+
 module.exports = {
     parametrize: parametrize,
-    isJSON: isJSON
+    isJSON: isJSON,
+    endsWith: endsWith
 };

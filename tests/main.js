@@ -5,10 +5,11 @@ var assert = require('stream-assert');
 var gulp = require('gulp');
 var jshint = require('gulp-jshint');
 var jshintStylish = require('jshint-stylish');
+var utils = require('../src/utils');
+var concat = require('gulp-concat');
 require('mocha');
 
 var wrapper = require('../');
-var compile = require('../src/compiler');
 
 function jsHintConfig() {
     return path.join(__dirname, '.jshintrc');
@@ -32,26 +33,24 @@ function normalize (str) {
         .replace(/"/gi, "'");
 }
 
-describe('compiler', function () {
-    it('should compile using "amd" template', function () {
-        var options = {
-            type: 'amd',
-            data: {
-                body: ''
-            }
-        };
-        compile(options).should.not.eql('');
-    });
-});
-
 describe('amd', function () {
 
     function mock(options, content) {
         var name = options.name ? options.name  : '';
         var deps = options.deps ? JSON.stringify(options.deps) : '[]';
         var args = (options.args ? options.args.join(',') : []).toString();
-        var exports = options.exports ? 'return ' + options.exports + ';' : '';
-        content = exports ? content : 'return ' + content + ';';
+        var exports = options.exports ? 'return ' + options.exports : '';
+        content = exports ? content : 'return ' + content;
+
+        if (exports) {
+            if (!utils.endsWith(exports, ';')) {
+                exports += ';';
+            }
+        } else {
+            if (!utils.endsWith(content, ';')) {
+                content += ';';
+            }
+        }
 
         var result = 'define("' + name +'",' + deps + ', function (' + args + ') {';
         result += content;
@@ -233,6 +232,23 @@ describe('amd', function () {
             .pipe(assert.end(done));
     });
 
+    it('should process multiple named modules in single file', function (done) {
+        gulp.src([fixtures('./named-module-1.js'), fixtures('./named-module-2.js')])
+            .pipe(concat('named-modules'))
+            .pipe(wrapper({
+                name: false
+            }))
+            .pipe(assert.first(function (d) {
+                var result = d.contents.toString();
+                var expected = '';
+                expected += 'define("named-module-1",["require","exports","module"],function (require,exports,module) {return console.log("named-module-1");});';
+                expected += 'define("named-module-2",["require","exports","module", "dep1","dep2"],function (require,exports,module,dep1,dep2) {return console.log("named-module-2");});';
+
+                should.equal(normalize(result), normalize(expected));
+            }))
+            .pipe(assert.end(done));
+    });
+
     it('should not have syntax errors', function (done) {
         var options = {
             type: 'commonjs',
@@ -278,8 +294,18 @@ describe('umd', function () {
         var name = options.name ? options.name :'';
         var deps = options.deps ? JSON.stringify(options.deps) : '[]';
         var args = (options.args ? options.args.join(',') : []).toString();
-        var exports = options.exports ? 'return ' + options.exports + ';' : '';
+        var exports = options.exports ? 'return ' + options.exports : '';
         content = exports ? content : 'return ' + content;
+
+        if (exports) {
+            if (!utils.endsWith(exports, ';')) {
+                exports += ';';
+            }
+        } else {
+            if (!utils.endsWith(content, ';')) {
+                content += ';';
+            }
+        }
 
         var result = '(function (root, factory) {';
         result += 'var resolved = [], required = '+deps+', i, len = required.length;';
@@ -426,6 +452,27 @@ describe('umd', function () {
             }))
             .pipe(assert.end(done));
     });
+
+    it('should process JSON file', function (done) {
+        var original,
+            src = fixtures('./fixture.json');
+
+        gulp.src(src)
+            .pipe(content(function (result) {
+                original = result;
+            }))
+            .pipe(wrapper({
+                type: 'umd'
+            }))
+            .pipe(assert.first(function (d) {
+                var options = {};
+                options.name = 'fixture';
+                options.deps = ['require', 'exports', 'module'];
+                options.args = ['require', 'exports', 'module'];
+                should.equal(normalize(d.contents.toString()), normalize(mock(options, original)));
+            }))
+            .pipe(assert.end(done));
+    });
 });
 
 describe('commonjs', function () {
@@ -443,9 +490,13 @@ describe('commonjs', function () {
 
         if(options.exports){
             result += content;
-            result += 'module.exports = ' + options.exports + ';';
+            result += 'module.exports = ' + options.exports;
         } else {
-            result += 'module.exports = ' + content + ';';
+            result += 'module.exports = ' + content;
+        }
+
+        if (!utils.endsWith(result, ';')) {
+            result += ';';
         }
 
         return result;
@@ -566,6 +617,25 @@ describe('commonjs', function () {
             .pipe(jshint.reporter('fail'))
             .pipe(assert.first(function (d) {
                 d.jshint.success.should.be.eql(true);
+            }))
+            .pipe(assert.end(done));
+    });
+
+    it('should process JSON file', function (done) {
+        var original,
+            src = fixtures('./fixture.json');
+
+        gulp.src(src)
+            .pipe(content(function (result) {
+                original = result;
+            }))
+            .pipe(wrapper({
+                type: 'commonjs'
+            }))
+            .pipe(assert.first(function (d) {
+                var options = {};
+                options.name = 'fixture';
+                should.equal(normalize(d.contents.toString()), normalize(mock(options, original)));
             }))
             .pipe(assert.end(done));
     });

@@ -131,7 +131,8 @@ Relative file's path.
 ### options.[file-name].name  
 Type: `String`.  
 Module name. Useful for separate options or one-file processing.  
-Default: File name.  
+Default: File name.
+Note: Set to ``false`` to turn off module's name optimization and leave it as it is.
 
 #### options.[file-name].deps  
 Type: `Array`.  
@@ -146,7 +147,7 @@ Default:  All module's constructors will get default arguments like 'exports', '
 ### options.[file-name].exports  
 Type: `String`.  
 Variable to return.  
-Note: In case of your code contains ``return`` statement, set ``false`` to avoid any extra ``return`` statements.  
+Note: Set to ``false`` to turn off module's export optimization and leave it as it is.  
 
 Separate options can be mixed with global one, but separate options has higher priority.  
 
