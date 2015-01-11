@@ -131,8 +131,8 @@ Relative file's path.
 ### options.[file-name].name  
 Type: `String`.  
 Module name. Useful for separate options or one-file processing.  
-Default: File name.
-Note: Set to ``false`` to turn off module's name optimization and leave it as it is.
+Default: File name.  
+Note: Set to ``false`` to turn off module's name optimization and leave it as it is.  
 
 #### options.[file-name].deps  
 Type: `Array`.  
