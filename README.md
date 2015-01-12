@@ -14,7 +14,7 @@
 </tr>
 </table>
 
-[![npm version](https://badge.fury.io/js/gulp-module-wrapper.svg)](http://badge.fury.io/js/gulp-module-wrapper)
+[![npm version](https://badge.fury.io/js/gulp-module-wrapper.svg)](https://www.npmjs.com/package/gulp-module-wrapper)
 
 ## Basic Usage
 
