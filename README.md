@@ -14,6 +14,8 @@
 </tr>
 </table>
 
+[![npm version](https://badge.fury.io/js/gulp-module-wrapper.svg)](http://badge.fury.io/js/gulp-module-wrapper)
+
 ## Basic Usage
 
 Processes the content of the file, module will return the entire content  
