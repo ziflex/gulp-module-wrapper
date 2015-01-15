@@ -139,8 +139,8 @@ Note: Set to ``false`` to turn off module's name optimization and leave it as it
 
 ### options.[file-name].prefix  
 Type: `String`.  
-Module name's prefix. Will be added before module's name.  
-Note: Ignored if ``name' is set to ``false``.  
+Module's name prefix. Will be added before module's name.  
+Note: Ignored if ``name`` is set to ``false``.  
 
 #### options.[file-name].deps  
 Type: `Array`.  
