@@ -253,6 +253,7 @@ describe('amd', function () {
         var options = {
             type: 'commonjs',
             name: 'customName',
+            prefix: 'test',
             deps: ['dep1', 'dep2'],
             args: ['depOne', 'depTwo'],
             exports: 'testModule'
@@ -284,6 +285,29 @@ describe('amd', function () {
                 options.deps = ['require', 'exports', 'module'];
                 options.args = ['require', 'exports', 'module'];
                 should.equal(normalize(d.contents.toString()), normalize(mock(options, original)));
+            }))
+            .pipe(assert.end(done));
+    });
+
+    it('should add prefix to module\'s name', function (done) {
+        var original,
+            options = {
+            name: 'plain-script',
+            prefix: 'test-'
+        };
+        gulp.src(fixtures('./plain-script-1.js'))
+            .pipe(content(function (result) {
+                original = result;
+            }))
+            .pipe(wrapper(options))
+            .pipe(assert.first(function (d) {
+                options.name = 'test-plain-script';
+                options.deps = ['require', 'exports', 'module'];
+                options.args = ['require', 'exports', 'module'];
+                var result = d.contents.toString();
+                var expected = mock(options, original);
+
+                should.equal(normalize(result), normalize(expected));
             }))
             .pipe(assert.end(done));
     });
@@ -470,6 +494,30 @@ describe('umd', function () {
                 options.deps = ['require', 'exports', 'module'];
                 options.args = ['require', 'exports', 'module'];
                 should.equal(normalize(d.contents.toString()), normalize(mock(options, original)));
+            }))
+            .pipe(assert.end(done));
+    });
+
+    it('should add prefix to module\'s name', function (done) {
+        var original,
+            options = {
+                type: 'umd',
+                name: 'plain-script',
+                prefix: 'test-'
+            };
+        gulp.src(fixtures('./plain-script-1.js'))
+            .pipe(content(function (result) {
+                original = result;
+            }))
+            .pipe(wrapper(options))
+            .pipe(assert.first(function (d) {
+                options.name = 'test-plain-script';
+                options.deps = ['require', 'exports', 'module'];
+                options.args = ['require', 'exports', 'module'];
+                var result = d.contents.toString();
+                var expected = mock(options, original);
+
+                should.equal(normalize(result), normalize(expected));
             }))
             .pipe(assert.end(done));
     });

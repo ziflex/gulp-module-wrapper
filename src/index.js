@@ -18,6 +18,7 @@ function getOptions(file, opts) {
         type: 'amd',
         root: null,
         name: null,
+        prefix: '',
         deps: null,
         args: null,
         exports: null,
@@ -42,6 +43,10 @@ function getOptions(file, opts) {
 
     if (opts.name === false) {
         result.name = null;
+    }
+
+    if (opts.prefix) {
+        result.name = opts.prefix + result.name;
     }
 
     return result;

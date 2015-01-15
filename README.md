@@ -137,6 +137,11 @@ Module name. Useful for separate options or one-file processing.
 Default: File name.  
 Note: Set to ``false`` to turn off module's name optimization and leave it as it is.  
 
+### options.[file-name].prefix  
+Type: `String`.  
+Module name's prefix. Will be added before module's name.  
+Note: Ignored if ``name' is set to ``false``.  
+
 #### options.[file-name].deps  
 Type: `Array`.  
 List of module dependencies.  
@@ -154,7 +159,7 @@ Note: Set to ``false`` to turn off module's export optimization and leave it as 
 
 Separate options can be mixed with global one, but separate options has higher priority.  
 
-### ignore
+### ignore  
 Type: `Array`.  
 List of files or glob patterns for files that should not be processed.  
 
