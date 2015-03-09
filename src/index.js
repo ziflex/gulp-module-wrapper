@@ -8,22 +8,32 @@ var path = require('path');
 var PluginError = utils.PluginError;
 
 var PLUGIN_NAME = 'gulp-module-wrapper';
+var DEFAULT_OPTIONS =  {
+    type: 'amd',
+    root: null,
+    name: null,
+    prefix: '',
+    deps: null,
+    args: null,
+    exports: null
+};
+
+function resolveOptions(file, opts) {
+    var filename = path.basename(file.path),
+        result = _.defaults(_.clone(opts), DEFAULT_OPTIONS);
+
+    result.file = file;
+
+    if (opts[filename]) {
+        result = _.defaults(_.clone(opts[filename]), result);
+    }
+
+    return result;
+}
 
 function getOptions(file, opts) {
-    var filename = path.basename(file.path),
-        defaults = { deps: [], args: [] },
-        result;
-
-    result  = _.defaults(_.clone(opts[filename] || opts), {
-        type: 'amd',
-        root: null,
-        name: null,
-        prefix: '',
-        deps: null,
-        args: null,
-        exports: null,
-        file: file
-    });
+    var defaults = { deps: [], args: [] },
+        result = resolveOptions(file, opts);
 
     if (result.type !== 'commonjs') {
         defaults.deps = ['require', 'exports', 'module'].concat(defaults.deps);
@@ -33,20 +43,20 @@ function getOptions(file, opts) {
     result.deps = defaults.deps.concat(result.deps || []);
     result.args = defaults.args.concat(result.args || []);
 
-    if (typeof result.root === 'string') {
-        result.name = path.relative(result.root, result.file.path).slice(0, -path.extname(result.file.path).length).replace(/\\/gi, '/');
-    }
-
-    if (typeof result.name !== 'string') {
-        result.name = path.basename(result.file.path, path.extname(result.file.path));
-    }
-
-    if (opts.name === false) {
+    if (result.name === false) {
         result.name = null;
-    }
+    } else {
+        if (typeof result.root === 'string') {
+            result.name = path.relative(result.root, result.file.path).slice(0, -path.extname(result.file.path).length).replace(/\\/gi, '/');
+        }
 
-    if (opts.prefix) {
-        result.name = opts.prefix + result.name;
+        if (typeof result.name !== 'string') {
+            result.name = path.basename(result.file.path, path.extname(result.file.path));
+        }
+
+        if (result.prefix) {
+            result.name = opts.prefix + result.name;
+        }
     }
 
     return result;

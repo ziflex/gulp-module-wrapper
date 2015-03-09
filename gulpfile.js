@@ -43,7 +43,7 @@ task('build', ['validate'], function () {
 });
 
 task('test', ['build'], function () {
-  return gulp.src('./tests/main.js')
+  return gulp.src('./tests/*.spec.js')
       .pipe(mocha({reporter: 'mocha-fivemat-reporter'}));
 });
 
