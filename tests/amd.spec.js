@@ -323,8 +323,8 @@ describe("amd", function () {
             .pipe(wrapper())
             .pipe(assert.first(function (d) {
                 options.name = 'named-module-with-deps';
-                options.deps = ['exports', 'module', 'require'];
-                options.args = ['exports', 'module', '__require__'];
+                options.deps = ['require', 'module', 'exports'];
+                options.args = ['require', 'module', '__exports__'];
 
                 var result = d.contents.toString();
                 var expected = mock(options, '"named-module-with-deps"');
@@ -333,4 +333,5 @@ describe("amd", function () {
             }))
             .pipe(assert.end(done));
     });
+
 });

@@ -1,3 +1,3 @@
-define("named-module-with-deps", ["require"], function (__require__) {
+define("named-module-with-deps", ["exports"], function (__exports__) {
     return "named-module-with-deps";
 });

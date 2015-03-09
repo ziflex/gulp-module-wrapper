@@ -17,8 +17,8 @@ function normalize(data) {
 
         if (found && found.length > 1) {
             var index = data.deps.indexOf(dep);
-            data.deps = data.deps.splice(index + 1);
-            data.args = data.args.splice(index + 1);
+            data.deps.splice(index, 1);
+            data.args.splice(index, 1);
         }
     });
 
