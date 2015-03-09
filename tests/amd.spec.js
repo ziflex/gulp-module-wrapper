@@ -314,4 +314,23 @@ describe("amd", function () {
             }))
             .pipe(assert.end(done));
     });
+
+    it('should avoid duplicated dependencies', function (done) {
+        var original,
+            options = {};
+
+        gulp.src(helpers.getFixtures('./named-module-with-deps.js'))
+            .pipe(wrapper())
+            .pipe(assert.first(function (d) {
+                options.name = 'named-module-with-deps';
+                options.deps = ['exports', 'module', 'require'];
+                options.args = ['exports', 'module', '__require__'];
+
+                var result = d.contents.toString();
+                var expected = mock(options, '"named-module-with-deps"');
+
+                should.equal(helpers.normalize(result), helpers.normalize(expected));
+            }))
+            .pipe(assert.end(done));
+    });
 });

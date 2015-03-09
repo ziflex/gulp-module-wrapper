@@ -1,5 +1,7 @@
 'use strict';
 
+var _ = require('lodash');
+
 function parametrize(str) {
     var result = str,
         rx = new RegExp(/^[^a-zA-Z_$]|[^0-9a-zA-Z_$]/gi),
@@ -45,8 +47,28 @@ function endsWith(str, criteria) {
     return result;
 }
 
+function pushUniq(arr, value) {
+    if (arr.indexOf(value) === -1) {
+        arr.push(value);
+    }
+}
+
+function concatUniq(source, target) {
+    var result = source ? source.slice() : [];
+
+    if (_.isArray(target)) {
+        target.forEach(function (el) {
+            pushUniq(result, el);
+        });
+    }
+
+    return result;
+}
+
 module.exports = {
     parametrize: parametrize,
     isJSON: isJSON,
-    endsWith: endsWith
+    endsWith: endsWith,
+    pushUniq: pushUniq,
+    concatUniq: concatUniq
 };

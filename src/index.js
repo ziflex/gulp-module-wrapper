@@ -1,11 +1,12 @@
 ﻿'use strict';
 var compile = require('./compiler');
-var utils = require('gulp-util');
+var utils = require('./utils');
+var gulpUtils = require('gulp-util');
 var match = require('gulp-match');
 var _ = require('lodash');
 var through = require('through2');
 var path = require('path');
-var PluginError = utils.PluginError;
+var PluginError = gulpUtils.PluginError;
 
 var PLUGIN_NAME = 'gulp-module-wrapper';
 var DEFAULT_OPTIONS =  {
@@ -17,6 +18,7 @@ var DEFAULT_OPTIONS =  {
     args: null,
     exports: null
 };
+var DEFAULT_MODULES = ['require', 'exports', 'module'];
 
 function resolveOptions(file, opts) {
     var filename = path.basename(file.path),
@@ -33,15 +35,15 @@ function resolveOptions(file, opts) {
 
 function getOptions(file, opts) {
     var defaults = { deps: [], args: [] },
-        result = resolveOptions(file, opts);
+        result = resolveOptions(file, opts || {});
 
     if (result.type !== 'commonjs') {
-        defaults.deps = ['require', 'exports', 'module'].concat(defaults.deps);
-        defaults.args = ['require', 'exports', 'module'].concat(defaults.args);
+        defaults.deps = DEFAULT_MODULES;
+        defaults.args = DEFAULT_MODULES;
     }
 
-    result.deps = defaults.deps.concat(result.deps || []);
-    result.args = defaults.args.concat(result.args || []);
+    result.deps = utils.concatUniq(defaults.deps, result.deps);
+    result.args = utils.concatUniq(defaults.args, result.args);
 
     if (result.name === false) {
         result.name = null;
