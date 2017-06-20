@@ -45,13 +45,25 @@ function print() { __p += __j.call(arguments, '') }
 with (obj) {
 
  if(data.deps && data.deps.length){ ;
-__p += '\r\n';
+__p += '\r\n    ';
  for (var i = 0; i < data.deps.length; i += 1) { ;
-__p += '\r\nvar ' +
+__p += '\r\n        ';
+ if(data.deps[i].indexOf(".")>0) { ;
+__p += '\r\n            var ' +
+((__t = ( data.deps[i].split(".")[0] )) == null ? '' : __t) +
+' = require("' +
+((__t = ( data.deps[i].split(".")[0] )) == null ? '' : __t) +
+'").' +
+((__t = ( data.deps[i].split(".")[1] )) == null ? '' : __t) +
+';\r\n        ';
+ } else  { ;
+__p += '\r\n            var ' +
 ((__t = ( data.args && data.args.length ? data.args [i] : data.deps[i])) == null ? '' : __t) +
 ' = require("' +
 ((__t = ( data.deps[i] )) == null ? '' : __t) +
-'");\r\n';
+'");\r\n        ';
+ } ;
+__p += '\r\n    ';
  } ;
 __p += '\r\n';
  } ;

@@ -19,7 +19,14 @@ describe('commonjs', function () {
             for (var i = 0; i < options.deps.length; i += 1) {
                 var dep = options.deps[i];
                 var arg = options.args[i];
-                result += 'var ' + (arg ? arg : dep) + ' = require("' + dep + '");';
+                if(dep.indexOf('.') > 0) {
+                    var arr = dep.split(".");
+                    var module = arr[0];
+                    var subModule = arr[1];
+                    result += 'var ' + (module) + ' = require("' + module + '").' + subModule + ';';
+                }else {
+                    result += 'var ' + (arg ? arg : dep) + ' = require("' + dep + '");';
+                }
             }
         }
 
@@ -58,7 +65,7 @@ describe('commonjs', function () {
         var original = '',
             options = {
                 type: 'commonjs',
-                deps: ['dep1', 'dep2']
+                deps: ['dep1', 'dep2', 'dep3.dep4']
             };
 
         gulp.src(helpers.getFixtures('./plain-script-3.js'))
