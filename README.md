@@ -15,6 +15,7 @@
 </table>
 
 [![npm version](https://badge.fury.io/js/gulp-module-wrapper.svg)](https://www.npmjs.com/package/gulp-module-wrapper)
+[![Build Status](https://secure.travis-ci.org/ziflex/pinterval.svg?branch=master)](http://travis-ci.org/ziflex/pinterval)
 
 ## Basic Usage
 
@@ -118,12 +119,33 @@ gulp.task('wrap', function() {
 
 ``amd`` is used by default.  
 
+
+### Dependencies
+#### Commonjs
+
+Sine v0.3.8 there is a way to define sub module dependencies like ````'jade.runtime'````:
+
+````js
+
+gulp.task('wrap', function() {
+  gulp.src('./lib/*.js')
+    .pipe(wrapper({
+      type: 'commonjs',
+      deps: ['jade.runtime']
+    }))
+    .pipe(gulp.dest('./dist/'))
+});
+
+````
+
+This will inject the following code ````var jade = require('jade').runtime````.
+
 ## API  
 ### wrapper(options, [ignore])  
 
 #### options.[file-name].type  
 Type: `String`.  
-Type of module. 
+Type of module.
 Supported types: `amd`, `umd`, ``commonjs``.  
 Default: `amd`.  
 
