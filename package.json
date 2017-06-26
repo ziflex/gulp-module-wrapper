@@ -1,7 +1,7 @@
 {
   "name": "gulp-module-wrapper",
   "version": "0.3.8",
-  "description": "Process files to create modules.",
+  "description": "Module wrapper",
   "author": "ziflex <ziflex@gmail.com>",
   "homepage": "https://github.com/ziflex/gulp-module-wrapper",
   "repository": "git://github.com/ziflex/gulp-module-wrapper.git",
