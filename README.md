@@ -1,211 +1,268 @@
-## Information
-
-<table>
-<tr>
-<td>Package</td><td>gulp-module-wrapper</td>
-</tr>
-<tr>
-<td>Description</td>
-<td>Processes files to create AMD/UMD/CommonJS modules</td>
-</tr>
-<tr>
-<td>Node Version</td>
-<td>≥ 0.10</td>
-</tr>
-</table>
+# gulp-module-wrapper
 
 [![npm version](https://badge.fury.io/js/gulp-module-wrapper.svg)](https://www.npmjs.com/package/gulp-module-wrapper)
-[![Build Status](https://secure.travis-ci.org/ziflex/pinterval.svg?branch=master)](http://travis-ci.org/ziflex/pinterval)
+[![Build Status](https://secure.travis-ci.org/ziflex/gulp-module-wrapper.svg?branch=master)](http://travis-ci.org/ziflex/gulp-module-wrapper)
+
+A Gulp plugin that processes files to create AMD/UMD/CommonJS modules.
+
+## Table of Contents
+
+- [Installation](#installation)
+- [Information](#information)
+- [Basic Usage](#basic-usage)
+- [Module Types](#module-types)
+- [Dependencies](#dependencies)
+- [API](#api)
+- [License](#license)
+
+## Installation
+
+```bash
+npm install gulp-module-wrapper --save-dev
+```
+
+## Information
+
+| Property | Value |
+|----------|-------|
+| Package | gulp-module-wrapper |
+| Description | Processes files to create AMD/UMD/CommonJS modules |
+| Node Version | ≥ 0.10 |
 
 ## Basic Usage
 
-Processes the content of the file, module will return the entire content  
+Process the content of files, wrapping them as modules. The module will return the entire content:
 
 ```javascript
 var wrapper = require('gulp-module-wrapper');
 
 gulp.task('wrap', function() {
-  gulp.src('./lib/*.js')
+  return gulp.src('./lib/*.js')
     .pipe(wrapper())
-    .pipe(gulp.dest('./dist/'))
+    .pipe(gulp.dest('./dist/'));
 });
 ```
 
-Process the contents, with custom dependencies, callback params, and variable to return (exports)  
+Process files with custom dependencies, callback parameters, and export variable:
 
 ```javascript
 var wrapper = require('gulp-module-wrapper');
 
 gulp.task('wrap', function() {
-  gulp.src('./lib/*.js')
+  return gulp.src('./lib/*.js')
     .pipe(wrapper({
       deps: ['jade'],          // module's dependencies
       args: ['jade'],          // module's arguments
       exports: 'jade',         // variable to return
       root: 'templates/'       // include a module name in the define() call, relative to moduleRoot
     }))
-    .pipe(gulp.dest('./dist/'))
+    .pipe(gulp.dest('./dist/'));
 });
 ```
 
-The same but for specific files  
+Configure specific files with individual options:
 
 ```javascript
 var wrapper = require('gulp-module-wrapper');
 var options = {
-  'app.js' : {
-    'name' : 'app'        // allowed to specify module name, otherwise filename will be used
-    'deps' : ['router'],
-    'args' : ['appRouter'],
-    'exports' : 'app'
+  'app.js': {
+    name: 'app',        // allowed to specify module name, otherwise filename will be used
+    deps: ['router'],
+    args: ['appRouter'],
+    exports: 'app'
   },
-  'router.js' : {
-      'name' : 'router'
-      'exports' : 'router'
-    }
+  'router.js': {
+    name: 'router',
+    exports: 'router'
+  }
 };
 
 gulp.task('wrap', function() {
-  gulp.src('./lib/*.js')
+  return gulp.src('./lib/*.js')
     .pipe(wrapper(options))
-    .pipe(gulp.dest('./dist/'))
+    .pipe(gulp.dest('./dist/'));
 });
 ```
 
-Ignore files, for example, your AMD loader  
+Ignore specific files, for example, your AMD loader:
 
 ```javascript
 var wrapper = require('gulp-module-wrapper');
 
 gulp.task('wrap', function() {
-  gulp.src('./lib/*.js')
+  return gulp.src('./lib/*.js')
     .pipe(wrapper({}, ['**/require.js']))
-    .pipe(gulp.dest('./dist/'))
+    .pipe(gulp.dest('./dist/'));
 });
 ```
 
-or matched by pattern  
+Or ignore files matched by pattern:
 
 ```javascript
 var wrapper = require('gulp-module-wrapper');
 
 gulp.task('wrap', function() {
-  gulp.src('./lib/*.js')
+  return gulp.src('./lib/*.js')
     .pipe(wrapper({}, ['**/*.js']))
-    .pipe(gulp.dest('./dist/'))
+    .pipe(gulp.dest('./dist/'));
 });
 ```
-For more information look [here](https://github.com/robrich/gulp-match/blob/master/README.md)  
 
-All modules will get default dependencies like 'exports', 'require', 'module'.  
-If module root is not specified, filename will be used for module's name.  
+For more information about file matching patterns, see [gulp-match documentation](https://github.com/robrich/gulp-match/blob/master/README.md).
 
-### Module type
+**Note:** All modules will get default dependencies like 'exports', 'require', 'module'. If module root is not specified, the filename will be used for the module's name.
 
-``gulp-module-wrapper`` supports different module types: ``amd``, ``umd``, ``commonjs``
-To selected required module type just passe the option ``type``:  
+## Module Types
+
+`gulp-module-wrapper` supports different module types: `amd`, `umd`, and `commonjs`.
+
+To select the required module type, use the `type` option:
 
 ```javascript
 var wrapper = require('gulp-module-wrapper');
 
 gulp.task('wrap', function() {
-  gulp.src('./lib/*.js')
+  return gulp.src('./lib/*.js')
     .pipe(wrapper({
       type: 'umd'
     }))
-    .pipe(gulp.dest('./dist/'))
+    .pipe(gulp.dest('./dist/'));
 });
 ```
 
-``amd`` is used by default.  
+**Default:** `amd` is used by default.
+
+### AMD (Asynchronous Module Definition)
+```javascript
+// Input: console.log('Hello world');
+// Output:
+define([], function() {
+  console.log('Hello world');
+});
+```
+
+### UMD (Universal Module Definition)
+```javascript
+// Input: console.log('Hello world');
+// Output:
+(function (root, factory) {
+  // UMD wrapper that works in AMD, CommonJS, and browser globals
+  if (typeof define === 'function' && define.amd) {
+    define([], factory);
+  } else if (typeof module === 'object' && module.exports) {
+    module.exports = factory();
+  } else {
+    root.myModule = factory();
+  }
+}(this, function () {
+  console.log('Hello world');
+}));
+```
+
+### CommonJS
+```javascript
+// Input: console.log('Hello world');
+// Output:
+console.log('Hello world');
+```
 
 
-### Dependencies
-#### Commonjs
+## Dependencies
 
-Sine v0.3.8 there is a way to define sub module dependencies like ````'jade.runtime'````:
+### CommonJS Sub-module Dependencies
 
-````js
+Since version 0.3.8, you can define sub-module dependencies like `'jade.runtime'`:
 
+```javascript
 gulp.task('wrap', function() {
-  gulp.src('./lib/*.js')
+  return gulp.src('./lib/*.js')
     .pipe(wrapper({
       type: 'commonjs',
       deps: ['jade.runtime']
     }))
-    .pipe(gulp.dest('./dist/'))
+    .pipe(gulp.dest('./dist/'));
 });
+```
 
-````
+This will inject the following code: `var jade = require('jade').runtime`.
 
-This will inject the following code ````var jade = require('jade').runtime````.
+## API
 
-## API  
-### wrapper(options, [ignore])  
+### wrapper(options, [ignore])
 
-#### options.[file-name].type  
-Type: `String`.  
-Type of module.
-Supported types: `amd`, `umd`, ``commonjs``.  
-Default: `amd`.  
+#### Parameters
 
-### options.[file-name].root  
-Type: `String`.  
-Relative file's path.  
+- **options** `{Object|String}` - Configuration options for the wrapper
+- **ignore** `{Array}` _(optional)_ - List of files or glob patterns for files that should not be processed
 
-### options.[file-name].name  
-Type: `String`.  
-Module name. Useful for separate options or one-file processing.  
-Default: File name.  
-Note: Set to ``false`` to turn off module's name optimization and leave it as it is.  
+### Global Options
 
-### options.[file-name].prefix  
-Type: `String`.  
-Module's name prefix. Will be added before module's name.  
-Note: Ignored if ``name`` is set to ``false``.  
+These options can be applied globally to all files:
 
-#### options.[file-name].deps  
-Type: `Array`.  
-List of module dependencies.  
-Note: All modules will get default dependencies like 'exports', 'require', 'module'.  
+#### options.type
+- **Type:** `String`
+- **Default:** `'amd'`
+- **Description:** Type of module wrapper to generate
+- **Supported values:** `'amd'`, `'umd'`, `'commonjs'`
 
-### options.[file-name].args  
-Type: `Array`.  
-List of module's constructor arguments.  
-Default:  All module's constructors will get default arguments like 'exports', 'require', 'module'.  
+#### options.root
+- **Type:** `String`
+- **Description:** Relative file path for the module
 
-### options.[file-name].exports  
-Type: `String`.  
-Variable to return.  
-Note: Set to ``false`` to turn off module's export optimization and leave it as it is.  
+#### options.name
+- **Type:** `String`
+- **Default:** File name (without extension)
+- **Description:** Module name. Useful for separate options or one-file processing
+- **Note:** Set to `false` to turn off module name optimization and leave it as-is
 
-Separate options can be mixed with global one, but separate options has higher priority.  
+#### options.prefix
+- **Type:** `String`
+- **Description:** Module name prefix. Will be added before the module name
+- **Note:** Ignored if `name` is set to `false`
 
-### ignore  
-Type: `Array`.  
-List of files or glob patterns for files that should not be processed.  
+#### options.deps
+- **Type:** `Array`
+- **Description:** List of module dependencies
+- **Note:** All modules will get default dependencies like 'exports', 'require', 'module'
 
-## LICENSE
+#### options.args
+- **Type:** `Array`
+- **Default:** `['exports', 'require', 'module']`
+- **Description:** List of module constructor arguments
 
-(MIT License)
+#### options.exports
+- **Type:** `String`
+- **Description:** Variable to return/export from the module
+- **Note:** Set to `false` to turn off module export optimization and leave it as-is
+
+### File-specific Options
+
+You can specify options for individual files using the filename as the key:
+
+```javascript
+var options = {
+  'app.js': {
+    name: 'myApp',
+    type: 'umd',
+    exports: 'App'
+  },
+  'utils.js': {
+    name: 'utilities',
+    deps: ['lodash']
+  }
+};
+```
+
+**Note:** File-specific options have higher priority than global options.
+
+## License
+
+MIT License
 
 Copyright (c) 2014 Tim Voronov
 
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-"Software"), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
